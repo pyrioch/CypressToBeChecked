@@ -1,10 +1,14 @@
+
 export {
   footerCheck,
   baseFooter,
   socialFooter,
   randomGenerator,
   RandomProviderGenerator,
+
   getRandomNum,
+
+
 }
 //Functions to be imported to HBC Tests
 function footerCheck() {
@@ -114,6 +118,7 @@ function RandomProviderGenerator(noOfCahrs) {
   console.log(randstr)
   return randstr
 }
+
 
 function getRandomNum(length) {
   var randomNum = (
