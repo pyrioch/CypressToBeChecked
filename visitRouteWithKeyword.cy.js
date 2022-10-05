@@ -25,7 +25,7 @@ it('Visit Routes based on given string', () => {
             .wait(7)
             .location()
             .should((loc) => {
-              expect(loc.href).to.include(loc.pathname)
+              expect(loc.pathname).to.include(givenString)
             })
         }
       })
