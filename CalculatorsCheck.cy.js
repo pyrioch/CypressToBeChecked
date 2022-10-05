@@ -48,10 +48,19 @@ it('Visit Routes based on given string', () => {
     .scrollIntoView()
     .find('input')
     .each(($el, index) => {
-      $el.attr('type') == 'text'
-        ? cy.wrap($el).type(randomGenerator(index))
-        : cy.wrap($el).type(RandomProviderGenerator(index))
-      cy.log($el, index)
+      if ($el.attr('type') == 'text') {
+        cy.wrap($el).type(randomGenerator(index))
+      }
+
+      else if ($el.attr('type') == 'email') {
+        cy.wrap($el).type(RandomProviderGenerator(index))
+      }
+
+      else if ($el.attr('type') == 'tel') {
+        cy.wrap($el).type(69+getRandomNum(8))
+      } else {
+        cy.wrap($el).type(Math.floor(1000 * (Math.random() + 1)))
+      }
     })
 
   //Πέφτει σε inf loop , επειδή πρέπει να γίνει κλήση της μεθόδου children() τουλάχιστον δύο φορές.
@@ -79,10 +88,16 @@ it('Visit Routes based on given string', () => {
     .each(($el, index) => {
       if ($el.attr('type') == 'text') {
         cy.wrap($el).type(randomGenerator(index))
-      } else if ($el.attr('type') == 'e-mail') {
+      }
+
+      if ($el.attr('type') == 'e-mail') {
         cy.wrap($el).type(RandomProviderGenerator(index))
+      }
+
+      if ($el.attr('type') == 'tel') {
+        cy.wrap($el).type(getRandomNum(10))
       } else {
-        cy.wrap($el).type(index * (Math.random() + 1))
+        cy.wrap($el).type(Math.floor(1000 * (Math.random() + 1)))
       }
     })
 
@@ -105,4 +120,36 @@ it('Visit Routes based on given string', () => {
   cy.location().should((loc) => {
     expect(loc.href).to.include(loc.pathname)
   })
+
+  //Green Car loan Calc
+
+  cy.get(
+    '#s-green-car-loan-calculator > .s-loan-calculator > .s-loan-calculator__calculator > .b-loan-calculator'
+  )
+    .should('exist')
+    .find('input')
+    .each(($input, index) => {
+      if ($input.attr('inputmode') == 'decimal') {
+        cy.wrap($input).type(Math.floor(1000 * (Math.random() + 1)))
+        cy.log(index)
+      }
+    })
+
+  const currentValue = 1000
+  const targetValue = 100000
+  const increment = 10000
+  const steps = (targetValue - currentValue) / increment
+  const arrows = '{rightarrow}'.repeat(steps)
+
+  cy.get(
+    '#s-green-car-loan-calculator  > .s-loan-calculator > .s-loan-calculator__calculator > .b-loan-calculator > .b-loan-calculator__body > .b-loan-calculator__main'
+  )
+    .find('.vue-slider-dot-handle')
+    .each((itm, index) => {
+      if (index != 2) {
+        cy.wrap(itm).type(arrows)
+      } else {
+        cy.wrap(itm).type('{rightarrow}'.repeat(5))
+      }
+    })
 })
