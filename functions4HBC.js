@@ -1,14 +1,12 @@
-
 export {
   footerCheck,
   baseFooter,
   socialFooter,
   randomGenerator,
   RandomProviderGenerator,
-
   getRandomNum,
-
-
+  loanCalculator,
+  formatDate,
 }
 //Functions to be imported to HBC Tests
 function footerCheck() {
@@ -119,7 +117,6 @@ function RandomProviderGenerator(noOfCahrs) {
   return randstr
 }
 
-
 function getRandomNum(length) {
   var randomNum = (
     Math.pow(10, length)
@@ -128,4 +125,34 @@ function getRandomNum(length) {
     Math.floor(Math.random() * Math.pow(10, length) + 1).toString()
   ).slice(-length)
   return randomNum
+}
+
+//To be called inside an it block
+
+function loanCalculator(element_id, sliderstart, sliderend, increment) {
+  var steps = (sliderend - sliderstart) / increment
+  var arrows = '{rightarrow}'.repeat(steps)
+
+  cy.get(element_id)
+    .find('.vue-slider-dot-handle')
+    .each((itm, index) => {
+      if (index != 2) {
+        cy.wrap(itm).type(arrows)
+      } else {
+        cy.wrap(itm).type('{rightarrow}'.repeat(25))
+      }
+    })
+}
+
+//Για datepicker
+
+function formatDate(date) {
+  return [
+    date.getFullYear(),
+    padTo2Digits(date.getMonth() + 1),
+    padTo2Digits(date.getDate()),
+  ].join('-')
+  function padTo2Digits(num) {
+    return num.toString().padStart(2, '0')
+  }
 }

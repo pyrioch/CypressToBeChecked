@@ -1,3 +1,4 @@
+//To be exported to function 
 const url = 'http://localhost:3000/'
 let givenString = 'Register'
 beforeEach('Homepage', () => {
