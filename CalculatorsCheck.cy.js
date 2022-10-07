@@ -2,14 +2,14 @@ import {
   randomGenerator,
   RandomProviderGenerator,
   getRandomNum,
+  formatDate
 } from './functions4HBC'
+
 const url = 'http://localhost:3000/'
 let givenString = 'Calculators'
-beforeEach('Homepage', () => {
-  cy.visit('/')
-})
 
-it('Visit Routes based on given string', () => {
+beforeEach('Homepage and Visit Routes based on given string', () => {
+  cy.visit('/')
   cy.get(':nth-child(4) > .icon > .name').click()
 
   let stop = false
@@ -36,7 +36,11 @@ it('Visit Routes based on given string', () => {
       })
     })
 
-  //Check bottom form
+})
+
+it('Check the Form and abroad exch rate', () => {
+
+  //Check the submission form in the bottom 
 
   cy.get(
     ':nth-child(8) > .page-container > .b-calculator-accordion > .b-calculator-accordion__header'
@@ -50,14 +54,10 @@ it('Visit Routes based on given string', () => {
     .each(($el, index) => {
       if ($el.attr('type') == 'text') {
         cy.wrap($el).type(randomGenerator(index))
-      }
-
-      else if ($el.attr('type') == 'email') {
+      } else if ($el.attr('type') == 'email') {
         cy.wrap($el).type(RandomProviderGenerator(index))
-      }
-
-      else if ($el.attr('type') == 'tel') {
-        cy.wrap($el).type(69+getRandomNum(8))
+      } else if ($el.attr('type') == 'tel') {
+        cy.wrap($el).type(69 + getRandomNum(8))
       } else {
         cy.wrap($el).type(Math.floor(1000 * (Math.random() + 1)))
       }
@@ -77,10 +77,15 @@ it('Visit Routes based on given string', () => {
     })
  */
 
-  //Check the exchange rate Calculator
+//Check the abroad exchange rate Calculator
+
   cy.get(
     ':nth-child(1) > .page-container > .b-calculator-accordion > .b-calculator-accordion__header > .b-calculator-accordion__text > :nth-child(2) > .b-calculator-accordion__title'
   ).contains('Abroad Exchange Rates Calculator')
+
+//Get the current date in yy//mm/dd format to be passed into the datepicker 
+let date = formatDate(new Date())
+//cy.log(date)
 
   cy.get('.b-exchange')
     .should('exist')
@@ -88,20 +93,24 @@ it('Visit Routes based on given string', () => {
     .each(($el, index) => {
       if ($el.attr('type') == 'text') {
         cy.wrap($el).type(randomGenerator(index))
-      }
-
-      if ($el.attr('type') == 'e-mail') {
-        cy.wrap($el).type(RandomProviderGenerator(index))
-      }
-
-      if ($el.attr('type') == 'tel') {
-        cy.wrap($el).type(getRandomNum(10))
-      } else {
+      } else if ($el.attr('inputmode') == 'decimal') {
         cy.wrap($el).type(Math.floor(1000 * (Math.random() + 1)))
+      } else {
+
+        //Will pick the current date 
+        cy.wrap($el)
+        .click()
+        .siblings()
+        .then(($el)=>{
+         
+          cy.wrap($el)
+          .find(`.id-${date}`+'> .vc-day-content')  
+          .click()
+
+        })
+        
       }
     })
-
-  //Τις επιλογές για currency
 
   cy.get('.b-exchange')
     .find('li')
@@ -121,7 +130,7 @@ it('Visit Routes based on given string', () => {
     expect(loc.href).to.include(loc.pathname)
   })
 
-  //Green Car loan Calc
+  //Check the Green Car loan Calculator
 
   cy.get(
     '#s-green-car-loan-calculator > .s-loan-calculator > .s-loan-calculator__calculator > .b-loan-calculator'
@@ -152,4 +161,27 @@ it('Visit Routes based on given string', () => {
         cy.wrap(itm).type('{rightarrow}'.repeat(5))
       }
     })
+
+;
 })
+
+it('Property Loan Calc', () => {
+  
+  // To be exported to function same code as on top block
+  const currentValue = 1000
+  const targetValue = 3000000
+  const increment = 100000
+  const steps = (targetValue - currentValue) / increment
+  const arrows = '{rightarrow}'.repeat(steps)
+
+  cy.get('#s-property-loan-calculator > .s-loan-calculator > .s-loan-calculator__calculator > .b-loan-calculator')
+  .should('exist')
+  .find('.vue-slider-dot-handle')
+    .each((itm, index) => {
+      if (index != 2) {
+        cy.wrap(itm).type(arrows)
+      } else {
+        cy.wrap(itm).type('{rightarrow}'.repeat(25))
+      }
+    })
+})  

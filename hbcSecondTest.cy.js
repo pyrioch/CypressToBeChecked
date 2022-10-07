@@ -120,6 +120,7 @@ it('InterestformCheck', () => {
     .children('input')
 
     .each((itm, index) => {
+      
       if (itm.attr('type') == 'email') {
         cy.wrap(itm).type(RandomProviderGenerator(index))
         //Για λάθος e-mail input switch την RandomProviderGenerator με την randomGenerator

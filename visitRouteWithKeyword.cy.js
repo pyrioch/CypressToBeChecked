@@ -1,3 +1,4 @@
+//To be exported to function 
 const url = 'http://localhost:3000/'
 let givenString = 'Register'
 beforeEach('Homepage', () => {
@@ -25,7 +26,7 @@ it('Visit Routes based on given string', () => {
             .wait(7)
             .location()
             .should((loc) => {
-              expect(loc.href).to.include(loc.pathname)
+              expect(loc.pathname).to.include(givenString)
             })
         }
       })
